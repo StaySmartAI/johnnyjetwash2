@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Johnny Jetwash Quote Calculator</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #07111f;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .calculator {
+      width: 100%;
+      max-width: 460px;
+      background: #ffffff;
+      color: #07111f;
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+    }
+
+    .brand {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 34px;
+      letter-spacing: -1px;
+      line-height: 1;
+      color: #0099ff;
+    }
+
+    .brand p {
+      margin: 10px 0 0;
+      color: #4b5563;
+      font-size: 16px;
+    }
+
+    label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 16px;
+      margin-bottom: 18px;
+      border: 2px solid #d1d5db;
+      border-radius: 14px;
+      font-size: 18px;
+      background: #ffffff;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: #0099ff;
+      box-shadow: 0 0 0 4px rgba(0, 153, 255, 0.12);
+    }
+
+    .results {
+      background: #f3f8ff;
+      border: 2px solid #d7ecff;
+      border-radius: 18px;
+      padding: 22px;
+      margin-top: 8px;
+    }
+
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+      font-size: 17px;
+    }
+
+    .result-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .result-value {
+      font-weight: 800;
+    }
+
+    .price {
+      font-size: 30px;
+      color: #0077cc;
+    }
+
+    .rate {
+      color: #4b5563;
+      font-size: 15px;
+      text-align: center;
+      margin-top: 14px;
+    }
+
+    .note {
+      margin-top: 18px;
+      font-size: 13px;
+      line-height: 1.55;
+      color: #6b7280;
+      text-align: center;
+    }
+
+    .note a {
+      color: #0099ff;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .note a:hover {
+      text-decoration: underline;
+    }
+
+    .button {
+      display: block;
+      width: 100%;
+      margin-top: 22px;
+      padding: 16px;
+      border-radius: 999px;
+      background: #0099ff;
+      color: #ffffff;
+      text-align: center;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 18px;
+    }
+
+    .button:hover {
+      background: #0077cc;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="calculator">
+
+    <section class="brand">
+      <h1>Johnny Jetwash</h1>
+      <p>Drive, Patio & Decking Quote Calculator</p>
+    </section>
+
+    <label for="service">Service Type</label>
+    <select id="service">
+      <option value="Drive">Drive</option>
+      <option value="Patio">Patio</option>
+      <option value="Decking">Decking</option>
+      <option value="Pathway">Pathway</option>
+    </select>
+
+    <label for="surface">Surface Type</label>
+    <select id="surface">
+      <option value="Block Paving">Block Paving</option>
+      <option value="Slab Paving">Slab Paving</option>
+      <option value="Tarmac">Tarmac</option>
+      <option value="Wood">Wood</option>
+    </select>
+
+    <label for="length">Length (m)</label>
+    <input id="length" type="number" min="0" step="0.1" placeholder="Enter length" />
+
+    <label for="width">Width (m)</label>
+    <input id="width" type="number" min="0" step="0.1" placeholder="Enter width" />
+
+    <section class="results" aria-live="polite">
+
+      <div class="result-row">
+        <span>Your area total</span>
+        <span class="result-value" id="area">0 m²</span>
+      </div>
+
+      <div class="result-row">
+        <span>Estimated cost</span>
+        <span class="result-value price" id="cost">£0.00</span>
+      </div>
+
+      <div class="rate" id="rateDisplay">
+        Current rate: £0.00 per m²
+      </div>
+
+    </section>
+
+    <a class="button" href="tel:YOURPHONE">Call Johnny Jetwash</a>
+
+    <p class="note">
+      Final quote may depend on access, condition and level of cleaning required.<br>
+      Calculator Created by
+      <a href="https://estimaticai.netlify.app" target="_blank">
+        EstimaticAI
+      </a>
+    </p>
+
+  </main>
+
+  <script>
+
+    const pricing = {
+      "Decking-Wood": 2,
+
+      "Drive-Block Paving": 3.25,
+      "Drive-Slab Paving": 3,
+      "Drive-Tarmac": 2.5,
+
+      "Patio-Block Paving": 3.25,
+      "Patio-Slab Paving": 3,
+      "Patio-Tarmac": 2.5,
+
+      "Pathway-Block Paving": 3.25,
+      "Pathway-Slab Paving": 3,
+      "Pathway-Tarmac": 2.5
+    };
+
+    const serviceInput = document.getElementById('service');
+    const surfaceInput = document.getElementById('surface');
+    const lengthInput = document.getElementById('length');
+    const widthInput = document.getElementById('width');
+
+    const areaOutput = document.getElementById('area');
+    const costOutput = document.getElementById('cost');
+    const rateDisplay = document.getElementById('rateDisplay');
+
+    function calculateQuote() {
+
+      const service = serviceInput.value;
+      const surface = surfaceInput.value;
+
+      const length = parseFloat(lengthInput.value) || 0;
+      const width = parseFloat(widthInput.value) || 0;
+
+      const area = length * width;
+
+      const pricingKey = `${service}-${surface}`;
+      const rate = pricing[pricingKey] || 0;
+
+      const cost = area * rate;
+
+      areaOutput.textContent = `${area.toFixed(2)} m²`;
+      costOutput.textContent = `£${cost.toFixed(2)}`;
+      rateDisplay.textContent = `Current rate: £${rate.toFixed(2)} per m²`;
+    }
+
+    function updateSurfaceOptions() {
+
+      const service = serviceInput.value;
+
+      if (service === 'Decking') {
+        surfaceInput.innerHTML = `
+          <option value="Wood">Wood</option>
+        `;
+      } else {
+        surfaceInput.innerHTML = `
+          <option value="Block Paving">Block Paving</option>
+          <option value="Slab Paving">Slab Paving</option>
+          <option value="Tarmac">Tarmac</option>
+        `;
+      }
+
+      calculateQuote();
+    }
+
+    serviceInput.addEventListener('change', updateSurfaceOptions);
+    surfaceInput.addEventListener('change', calculateQuote);
+    lengthInput.addEventListener('input', calculateQuote);
+    widthInput.addEventListener('input', calculateQuote);
+
+    updateSurfaceOptions();
+
+  </script>
+
+</body>
+</html>
